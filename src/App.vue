@@ -3,14 +3,13 @@
 </template>
 
 <script setup>
-// import HelloWorld from "./components/HelloWorld.vue";
-import { Col, Row } from 'vant';
 
 </script>
 
 <style>
 html, body {
   height: 100%;
+  width: 100%;
 }
 
 #app {
@@ -21,6 +20,7 @@ html, body {
   color: #2c3e50;
   margin-top: 0px;
   height: 100%;
+  width: 100%;
   overflow-x: auto;
 }
 </style>

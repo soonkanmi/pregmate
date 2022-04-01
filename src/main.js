@@ -1,6 +1,6 @@
 import { createApp } from "vue";
 import { registerSW } from "virtual:pwa-register";
-import { VueRouter } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 
 import App from "./App.vue";
 
@@ -16,10 +16,9 @@ const routes = [
   { path: "/home", component: () => import('./views/Home.vue'), name: 'home'},
 ];
 
-const router = VueRouter.createRouter({
-  // 4. Provide the history implementation to use. We are using the hash history for simplicity here.
-  history: VueRouter.createWebHashHistory(),
-  routes, // short for `routes: routes`
+const router = createRouter({
+  history: createWebHistory(),
+  routes
 });
 
 const app = createApp(App);
