@@ -2,14 +2,11 @@
   <router-view></router-view>
 </template>
 
-<script setup>
-
-</script>
+<script setup></script>
 
 <style>
-html, body {
-  height: 100%;
-  width: 100%;
+body {
+  background-color: #f6f5ef;
 }
 
 #app {
@@ -18,9 +15,5 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 0px;
-  height: 100%;
-  width: 100%;
-  overflow-x: auto;
 }
 </style>

@@ -1,8 +1,11 @@
 import { createApp } from "vue";
 import { registerSW } from "virtual:pwa-register";
 import { createRouter, createWebHistory } from "vue-router";
+import { Button, Card, CellGroup, Col, Field, Form, NavBar, Row, Tabbar, TabbarItem } from 'vant';
 
 import App from "./App.vue";
+
+import "./index.css";
 
 const updateSW = registerSW({
   onNeedRefresh() {},
@@ -24,5 +27,23 @@ const router = createRouter({
 const app = createApp(App);
 
 app.use(router);
+
+const vantComponents = [
+  Tabbar,
+  TabbarItem,
+  Form,
+  Field,
+  Row,
+  Col,
+  NavBar,
+  CellGroup,
+  Button,
+  Card,
+]
+
+vantComponents.forEach((vantComponent) => {
+  app.use(vantComponent);
+
+});
 
 app.mount("#app");
