@@ -2,7 +2,6 @@ import { createApp } from "vue";
 import { registerSW } from "virtual:pwa-register";
 import { createRouter, createWebHistory } from "vue-router";
 import { Button, Card, CellGroup, Col, Field, Form, NavBar, Row, Tabbar, TabbarItem } from 'vant';
-
 import App from "./App.vue";
 
 import "./index.css";
@@ -38,7 +37,7 @@ const vantComponents = [
   NavBar,
   CellGroup,
   Button,
-  Card,
+  Card
 ]
 
 vantComponents.forEach((vantComponent) => {

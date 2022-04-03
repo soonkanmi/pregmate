@@ -39,5 +39,5 @@ const formData = ref({
   password: "",
 });
 
-const onSubmit = () => router.replace('home');
+const onSubmit = () => router.replace({name: 'home' });
 </script>
