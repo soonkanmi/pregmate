@@ -30,7 +30,7 @@
         class="bg-white border-slate-100 dark:bg-slate-800 dark:border-slate-500 border-b rounded-t-xl rounded-b-xl p-4 sm:p-10 sm:pb-8 lg:p-6 xl:p-10 xl:pb-8 space-y-6 sm:space-y-8 lg:space-y-6 xl:space-y-8 mt-5"
       >
         <div class="flex items-center space-x-4">
-          <h1 class="text-white text-7xl">30</h1>
+          <h1 class="text-black-600 dark:text-white text-7xl">30</h1>
           <div
             class="min-w-0 flex-auto space-y-1 justify-start text-left font-semibold text-lg"
           >
