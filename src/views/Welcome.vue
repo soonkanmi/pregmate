@@ -22,7 +22,7 @@
       </van-row>
       <van-row justify="center" class="my-4">
         <van-col>
-          <van-button plain hairline round type="primary" class="w-60"
+          <van-button plain hairline round type="primary" class="w-60" to="register"
             >Create an Account</van-button
           >
         </van-col>

@@ -8,6 +8,7 @@
           v-model="formData.email"
           name="Email"
           label="Email"
+          type="email"
           placeholder="Email"
           :rules="[{ required: true, message: 'Email is required' }]"
         />
