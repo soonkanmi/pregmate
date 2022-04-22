@@ -35,33 +35,58 @@
           :rules="[{ required: true, message: 'Password is required' }]"
           required
         />
-        <van-field v-model="formData['password-confirmation']" type="password"
-        name="password-confirmation" label="Confirm Password"
-        placeholder="Confirm Password" :rules="[{ required: true, message:
-        'Confirm Password is required' }, { equalTo: 'password', message:
-        'Passwords does not match' }]" required/>
+        <van-field
+          v-model="formData['password_confirmation']"
+          type="password"
+          name="password_confirmation"
+          label="Confirm Password"
+          placeholder="Confirm Password"
+          :rules="[
+            { required: true, message: 'Confirm Password is required' },
+            { equal: 'password', message: 'Passwords does not match' },
+          ]"
+          required
+        />
       </van-cell-group>
       <div class="mt-10 mx-5">
-        <van-button
-          plain
-          round
-          block
-          type="primary"
-          native-type="submit"
-          @click="onSubmit"
-        >
+        <van-button plain round block type="primary" native-type="submit">
           Register
         </van-button>
       </div>
     </van-form>
   </div>
+  <van-popup
+    v-model:show="hasErrors"
+    closeable
+    round
+    close-icon="close"
+    position="bottom"
+    :style="{ height: '30%' }"
+    @closed="clearErrors"
+  >
+    <div class="p-10">
+      <h2 class="my-2 leading-4 text-red-500 text-lg font-bold">Error!</h2>
+      <h3 class="my-2 leading-6">{{ errorMessage }}</h3>
+      <ul v-if="validationErrors.length">
+        <li
+          class="my-1 text-red-500"
+          v-for="(error, index) in validationErrors"
+          :key="index"
+        >
+          {{ error }}
+        </li>
+      </ul>
+    </div>
+  </van-popup>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, inject } from "vue";
 import { useRouter } from "vue-router";
+import { Toast } from "vant";
 
 const router = useRouter();
+const axios = inject("axios");
 const goBack = () => router.back();
 
 const formData = ref({
@@ -71,5 +96,53 @@ const formData = ref({
   password_confirmation: "",
 });
 
-const onSubmit = () => router.replace({ name: "personal-info-form" });
+const url = `${import.meta.env.VITE_API_BASE_URL}/register`;
+
+const hasErrors = ref(false);
+const errorMessage = ref("null");
+const validationErrors = ref([]);
+
+const clearErrors = () => {
+  hasErrors.value = false;
+  errorMessage.value = null;
+  validationErrors.value = [];
+};
+
+const onSubmit = () => {
+  clearErrors();
+
+  const toast = Toast.loading({
+    message: "Loading...",
+    forbidClick: true,
+    loadingType: "spinner",
+    overlay: true,
+    duration: 0,
+  });
+
+  axios
+    .post(url, formData.value)
+    .then((response) => {
+      Toast.success({
+        message: "Registration successful",
+        onClose: () => {
+          router.replace({ name: "personal-info-form" });
+        },
+      });
+    })
+    .catch((err) => {
+      errorMessage.value = err.response.data.message;
+
+      if (err.response.status === 422) {
+        errorMessage.value = "Validation errors";
+        validationErrors.value = Object.values(err.response.data.errors)
+          .join(",")
+          .split(",");
+      }
+
+      hasErrors.value = true;
+    })
+    .finally(() => {
+      toast.clear();
+    });
+};
 </script>
