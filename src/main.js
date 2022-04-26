@@ -65,6 +65,11 @@ const routes = [
     component: () => import("./views/MedicalInfo.vue"),
     name: "medical-info-form",
   },
+  {
+    path: "/vital-form",
+    component: () => import("./views/VitalForm.vue"),
+    name: "vital-form",
+  },
   { path: "/home", component: () => import("./views/Home.vue"), name: "home" },
 ];
 
