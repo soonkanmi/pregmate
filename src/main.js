@@ -60,6 +60,11 @@ const routes = [
     component: () => import("./views/ObstetricalInfo.vue"),
     name: "obstetrical-info-form",
   },
+  {
+    path: "/medical-info",
+    component: () => import("./views/MedicalInfo.vue"),
+    name: "medical-info-form",
+  },
   { path: "/home", component: () => import("./views/Home.vue"), name: "home" },
 ];
 

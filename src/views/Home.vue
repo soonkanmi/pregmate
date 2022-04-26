@@ -97,8 +97,10 @@ onMounted(() => {
     return router.replace({'name': 'personal-info-form'});
   } else if (!user.obstetrical_information) {
     return router.replace({'name': 'obstetrical-info-form'});
+  } else if (!user.medical_information) {
+    return router.replace({'name': 'medical-info-form'});
   }
-console.log(user);
+
   currentUser.value = user;
 });
 </script>

@@ -1,66 +1,64 @@
 <template>
   <van-nav-bar title="PregMate" />
-  <h3 class="mt-20 pt-10 font-bold text-xl">Obstetrical Information</h3>
+  <h3 class="mt-20 pt-10 font-bold text-xl">Medical Information</h3>
   <div class="mt-2 pt-5 px-10">
     <van-form @submit="onSubmit">
       <van-cell-group class="py-3">
         <van-field
-          v-model="formData.previous_pregnancies"
-          name="previous_pregnancies"
-          label="# Previous Pregnancies"
-          placeholder="No. of Previous Pregnancies"
+          v-model="formData.bloodgroup"
+          name="bloodgroup"
+          label="Blood Group"
+          placeholder="Bloog Group"
           label-width="7em"
           :rules="[
             {
               required: true,
-              message: 'No. of previous pregnancies is required',
-            },
-          ]"
-          required
-        />
-        <van-field
-          v-model="formData.liveborns"
-          name="liveborns"
-          label="# of Live born"
-          placeholder="No. of Live born"
-          label-width="7em"
-          :rules="[{ required: true, message: 'No. of live born is required' }]"
-          required
-        />
-        <van-field
-          v-model="formData.stillbirths"
-          name="stillbirths"
-          label="# of Still births"
-          placeholder="No. of Still births"
-          label-width="7em"
-          :rules="[
-            { required: true, message: 'No. of still births is required' },
-          ]"
-          required
-        />
-        <van-field
-          v-model="formData.previous_mode_of_delivery"
-          name="previous_mode_of_delivery"
-          label="Prev. mode of Delivery"
-          placeholder="Prev. mode of Delivery"
-          label-width="7em"
-          :rules="[
-            {
-              required: true,
-              message: 'Previous mode of delivery is required',
+              message: 'Blood group is required',
             },
           ]"
           required
           readonly
-          @click="showPicker = true"
-          @focus="showPicker = true"
+          @click="showBGPicker = true"
+          @focus="showBGPicker = true"
         />
-        <van-popup v-model:show="showPicker" round position="bottom">
+        <van-popup v-model:show="showBGPicker" round position="bottom">
           <van-picker
-            title="Mode of Delivery"
-            :columns="modeOfDeliveries"
-            @cancel="showPicker = false"
-            @confirm="setDeliveryValue"
+            title="Bloog Group"
+            :columns="bloodGroups"
+            @cancel="showBGPicker = false"
+            @confirm="setBloodGroup"
+          />
+        </van-popup>
+        <van-field
+          v-model="formData.allergies"
+          name="allergies"
+          label="Any  Allergy?"
+          placeholder="Allergy(ies)"
+          label-width="7em"
+        />
+        <van-field
+          v-model="formData.rhesus_factor"
+          name="rhesus_factor"
+          label="Rhesus Factor"
+          placeholder="Rhesus factor"
+          label-width="7em"
+          :rules="[
+            {
+              required: true,
+              message: 'Rhesus Factor is required',
+            },
+          ]"
+          required
+          readonly
+          @click="showRFPicker = true"
+          @focus="showRFPicker = true"
+        />
+        <van-popup v-model:show="showRFPicker" round position="bottom">
+          <van-picker
+            title="Rhesus Factor"
+            :columns="rhesuFactors"
+            @cancel="showRFPicker = false"
+            @confirm="setRF"
           />
         </van-popup>
       </van-cell-group>
@@ -110,26 +108,37 @@ const baseUrl = `${import.meta.env.VITE_API_BASE_URL}`;
 const apiBase = `${import.meta.env.VITE_API_URL}`;
 const sessionStore = useSessionStore();
 
-const showDatePicker = ref(false);
 const currentUser = ref(null);
 
-const showPicker = ref(false);
+const showBGPicker = ref(false);
+const showRFPicker = ref(false);
+
 const formData = ref({
-  previous_pregnancies: 0,
-  liveborns: 0,
-  stillbirths: 0,
-  previous_mode_of_delivery: "",
+  bloodgroup: "",
+  allergies: "",
+  rhesus_factor: ""
 });
 
-const modeOfDeliveries = [
-  { text: "Not Applicable", value: "Not Applicable" },
-  { text: "Ceaserean Session", value: "Ceaserean Session" },
-  { text: "Normal Delivery", value: "Normal Delivery" },
+const bloodGroups = [
+  { text: "A", value: "A" },
+  { text: "B", value: "B" },
+  { text: "O", value: "O" },
+  { text: "AB", value: "AB" },
 ];
 
-const setDeliveryValue = (selectedOptions) => {
-  showPicker.value = false;
-  formData.value.previous_mode_of_delivery = selectedOptions.value;
+const rhesuFactors = [
+  { text: "Positive", value: "Positive" },
+  { text: "Negative", value: "Negative" },
+];
+
+const setBloodGroup = (selectedOptions) => {
+  showBGPicker.value = false;
+  formData.value.bloodgroup = selectedOptions.value;
+};
+
+const setRF = (selectedOptions) => {
+  showRFPicker.value = false;
+  formData.value.rhesus_factor = selectedOptions.value;
 };
 
 const hasErrors = ref(false);
@@ -155,7 +164,7 @@ const onSubmit = () => {
 
   axios.get(`${baseUrl}/sanctum/csrf-cookie`).then((response) => {
     axios
-      .post(`${apiBase}/update-medial-information`, formData.value)
+      .post(`${apiBase}/update-medical-information`, formData.value)
       .then((response) => {
         const user = response.data.data;
 
@@ -202,13 +211,12 @@ onMounted(() => {
   currentUser.value = user;
 
   if (user.medical_information) {
-    const obsData = user.medical_information;
+    const medData = user.medical_information;
 
     formData.value = {
-      previous_pregnancies: obsData.previous_pregnancies,
-      liveborns: obsData.liveborns,
-      stillbirths: obsData.stillbirths,
-      previous_mode_of_delivery: obsData.previous_mode_of_delivery,
+      bloodgroup: medData.bloodgroup,
+      rhesus_factor: medData.rhesus_factor,
+      allergies: medData.allergies
     };
   }
 });
