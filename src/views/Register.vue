@@ -96,7 +96,8 @@ const formData = ref({
   password_confirmation: "",
 });
 
-const url = `${import.meta.env.VITE_API_BASE_URL}/register`;
+const baseUrl = `${import.meta.env.VITE_API_BASE_URL}`;
+const apiBase = `${import.meta.env.VITE_API_URL}`;
 
 const hasErrors = ref(false);
 const errorMessage = ref("null");
@@ -119,33 +120,35 @@ const onSubmit = () => {
     duration: 0,
   });
 
-  axios
-    .post(url, formData.value)
-    .then((response) => {
-      Toast.success({
-        message: "Registration successful",
-        onClose: () => {
-          router.replace({ name: "personal-info-form" });
-        },
-      });
-    })
-    .catch((err) => {
+  axios.get(`${baseUrl}/sanctum/csrf-cookie`).then((response) => {
+    axios
+      .post(`${apiBase}/register`, formData.value)
+      .then((response) => {
+        Toast.success({
+          message: "Registration successful",
+          onClose: () => {
+            router.replace({ name: "personal-info-form" });
+          },
+        });
+      })
+      .catch((err) => {
         errorMessage.value =
           err.response && err.response.data && err.response.data.message
             ? err.response.data.message
             : "An unexpected error occured";
 
-      if (err.response && err.response.status === 422) {
-        errorMessage.value = "Validation errors";
-        validationErrors.value = Object.values(err.response.data.errors)
-          .join(",")
-          .split(",");
-      }
+        if (err.response && err.response.status === 422) {
+          errorMessage.value = "Validation errors";
+          validationErrors.value = Object.values(err.response.data.errors)
+            .join(",")
+            .split(",");
+        }
 
-      hasErrors.value = true;
-    })
-    .finally(() => {
-      Toast.clear();
-    });
+        hasErrors.value = true;
+      })
+      .finally(() => {
+        Toast.clear();
+      });
+  });
 };
 </script>
