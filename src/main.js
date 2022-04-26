@@ -23,6 +23,8 @@ import enUS from 'vant/es/locale/lang/en-US';
 import App from "./App.vue";
 import axios from "axios";
 import VueAxios from "vue-axios";
+import SecureLS from "secure-ls";
+import { createPinia } from "pinia";
 
 import "./index.css";
 
@@ -62,10 +64,17 @@ const router = createRouter({
 
 const app = createApp(App);
 
+axios.defaults.withCredentials = true;
+axios.defaults.headers['Content-Type'] = 'application/json';
+
 app.use(VueAxios, axios)
 app.provide('axios', app.config.globalProperties.axios)  // provide 'axios'
 
+var ls = new SecureLS({encodingType: 'aes'});
+app.provide('secureLS', ls)
+
 app.use(router);
+app.use(createPinia())
 
 Locale.use('en-US', enUS);
 const vantComponents = [

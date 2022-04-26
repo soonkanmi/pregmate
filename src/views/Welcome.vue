@@ -32,15 +32,26 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { useSessionStore } from "../stores/session";
 
 const router = useRouter();
 const visible = ref(false);
+const sessionStore = useSessionStore();
 
-setTimeout(() => {
-  visible.value = true;
-}, 1000);
+onMounted(() => {
+  const user = sessionStore.getCurrentUser;
+
+  if (user) {
+    return router.replace({name: 'home'});
+  }
+
+  setTimeout(() => {
+    visible.value = true;
+  }, 1000);
+
+});
 </script>
 
 <style>

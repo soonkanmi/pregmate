@@ -130,9 +130,12 @@ const onSubmit = () => {
       });
     })
     .catch((err) => {
-      errorMessage.value = err.response.data.message;
+        errorMessage.value =
+          err.response && err.response.data && err.response.data.message
+            ? err.response.data.message
+            : "An unexpected error occured";
 
-      if (err.response.status === 422) {
+      if (err.response && err.response.status === 422) {
         errorMessage.value = "Validation errors";
         validationErrors.value = Object.values(err.response.data.errors)
           .join(",")
@@ -142,7 +145,7 @@ const onSubmit = () => {
       hasErrors.value = true;
     })
     .finally(() => {
-      toast.clear();
+      Toast.clear();
     });
 };
 </script>
