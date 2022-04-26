@@ -18,6 +18,7 @@ import {
   Locale,
   Toast,
   Popup,
+  Picker,
 } from "vant";
 import enUS from 'vant/es/locale/lang/en-US';
 import App from "./App.vue";
@@ -53,6 +54,11 @@ const routes = [
     path: "/personal-info",
     component: () => import("./views/PersonalInfo.vue"),
     name: "personal-info-form",
+  },
+  {
+    path: "/obstetrical-info",
+    component: () => import("./views/ObstetricalInfo.vue"),
+    name: "obstetrical-info-form",
   },
   { path: "/home", component: () => import("./views/Home.vue"), name: "home" },
 ];
@@ -93,6 +99,7 @@ const vantComponents = [
   Cell,
   Toast,
   Popup,
+  Picker,
 ];
 
 vantComponents.forEach((vantComponent) => {

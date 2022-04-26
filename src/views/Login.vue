@@ -77,6 +77,8 @@ const onSubmit = () => {
           onClose: () => {
             if (!user.personal_information) {
               router.replace({ name: "personal-info-form" });
+            } else if (!user.obstetrical_information) {
+              router.replace({ name: "obstetrical-info-form" });
             } else {
               router.replace({ name: "home" });
             }

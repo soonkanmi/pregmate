@@ -21,7 +21,7 @@
             class="min-w-0 flex-auto space-y-1 justify-start text-left font-semibold text-lg"
           >
             <p class="text-cyan-500 dark:text-cyan-400 text-md leading-6">
-              Welcome Angelina
+              Welcome {{ currentUser ? currentUser.name : '' }}
             </p>
           </div>
         </div>
@@ -70,10 +70,35 @@
 </template>
 
 <script setup>
-// import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import AppLayout from "../components/Layout.vue";
+import { useSessionStore } from "../stores/session";
+
+const router = useRouter();
+const sessionStore = useSessionStore();
+
+const currentUser = ref(null);
 
 const goToVitals = () => {
   console.log("Loading Vitals");
 };
+
+onMounted(() => {
+  sessionStore.getFromLocalStorage(); // Load user session from local storage
+  const user = sessionStore.getCurrentUser; // get current user
+
+  if (!user) {
+    // check if active user
+    return router.replace("login"); // if not, go to login page
+  }
+
+  if (!user.personal_information) {
+    return router.replace({'name': 'personal-info-form'});
+  } else if (!user.obstetrical_information) {
+    return router.replace({'name': 'obstetrical-info-form'});
+  }
+console.log(user);
+  currentUser.value = user;
+});
 </script>

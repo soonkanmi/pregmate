@@ -1,75 +1,68 @@
 <template>
   <van-nav-bar title="PregMate" />
-  <h3 class="mt-20 pt-10 font-bold text-xl">Personal Information</h3>
+  <h3 class="mt-20 pt-10 font-bold text-xl">Obstetrical Information</h3>
   <div class="mt-2 pt-5 px-10">
     <van-form @submit="onSubmit">
       <van-cell-group class="py-3">
         <van-field
-          v-model="formData.name"
-          name="name"
-          label="Name"
-          placeholder="Full Name"
+          v-model="formData.previous_pregnancies"
+          name="previous_pregnancies"
+          label="# Previous Pregnancies"
+          placeholder="No. of Previous Pregnancies"
           label-width="7em"
-          :rules="[{ required: true, message: 'Name is required' }]"
+          :rules="[
+            {
+              required: true,
+              message: 'No. of previous pregnancies is required',
+            },
+          ]"
           required
         />
         <van-field
-          v-model="formData.phone"
-          name="phone"
-          label="Phone #"
-          placeholder="Phone number"
+          v-model="formData.liveborns"
+          name="liveborns"
+          label="# of Live born"
+          placeholder="No. of Live born"
           label-width="7em"
-          :rules="[{ required: true, message: 'Phone number is required' }]"
+          :rules="[{ required: true, message: 'No. of live born is required' }]"
           required
         />
         <van-field
-          v-model="formData.date_of_birth"
-          name="date_of_birth"
-          label="Date of Birth"
-          placeholder="Date or Birth"
+          v-model="formData.stillbirths"
+          name="stillbirths"
+          label="# of Still births"
+          placeholder="No. of Still births"
           label-width="7em"
-          :rules="[{ required: true, message: 'Date of Birth is required' }]"
+          :rules="[
+            { required: true, message: 'No. of still births is required' },
+          ]"
+          required
+        />
+        <van-field
+          v-model="formData.previous_mode_of_delivery"
+          name="previous_mode_of_delivery"
+          label="Prev. mode of Delivery"
+          placeholder="Prev. mode of Delivery"
+          label-width="7em"
+          :rules="[
+            {
+              required: true,
+              message: 'Previous mode of delivery is required',
+            },
+          ]"
           required
           readonly
-          @click="showDatePicker = true"
-          @focus="showDatePicker = true"
+          @click="showPicker = true"
+          @focus="showPicker = true"
         />
-        <van-calendar
-          v-model:show="showDatePicker"
-          @confirm="onDateSelected"
-          :max-date="maxDate"
-          :min-date="minDate"
-          color="#1644DE"
-        />
-        <van-field
-          v-model="formData.next_of_kin"
-          name="next_of_kin"
-          label="Next of Kin"
-          placeholder="Next of Kin"
-          label-width="7em"
-          :rules="[{ required: true, message: 'Next of Kin is required' }]"
-          required
-        />
-        <van-field
-          v-model="formData.address"
-          name="address"
-          label="Address"
-          placeholder="Address"
-          label-width="7em"
-          :rules="[{ required: true, message: 'Address is required' }]"
-          required
-          autosize
-          type="textarea"
-        />
-        <van-field
-          v-model="formData.occupation"
-          name="occupation"
-          label="Occupation"
-          placeholder="Occupation"
-          label-width="7em"
-          :rules="[{ required: true, message: 'Occupation is required' }]"
-          required
-        />
+        <van-popup v-model:show="showPicker" round position="bottom">
+          <van-picker
+            title="Mode of Delivery"
+            :columns="modeOfDeliveries"
+            @cancel="showPicker = false"
+            @confirm="setDeliveryValue"
+          />
+        </van-popup>
       </van-cell-group>
       <div class="mt-10 mx-5">
         <van-button plain round block type="primary" native-type="submit">
@@ -120,36 +113,24 @@ const sessionStore = useSessionStore();
 const showDatePicker = ref(false);
 const currentUser = ref(null);
 
+const showPicker = ref(false);
 const formData = ref({
-  name: "",
-  phone: "",
-  date_of_birth: "",
-  next_of_kin: "",
-  address: "",
-  occupation: "",
+  previous_pregnancies: 0,
+  liveborns: 0,
+  stillbirths: 0,
+  previous_mode_of_delivery: "",
 });
 
-const formatDate = (date) => {
-  let day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
-  let month = date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth();
+const modeOfDeliveries = [
+  { text: "Not Applicable", value: "Not Applicable" },
+  { text: "Ceaserean Session", value: "Ceaserean Session" },
+  { text: "Normal Delivery", value: "Normal Delivery" },
+];
 
-  return `${day}-${month}-${date.getFullYear()}`;
+const setDeliveryValue = (selectedOptions) => {
+  showPicker.value = false;
+  formData.value.previous_mode_of_delivery = selectedOptions.value;
 };
-
-const onDateSelected = (value) => {
-  showDatePicker.value = false;
-  formData.value.date_of_birth = formatDate(value);
-};
-
-const minDate = ref(new Date());
-const maxDate = ref(new Date());
-
-minDate.value = new Date(
-  minDate.value.setFullYear(minDate.value.getFullYear() - 60)
-);
-maxDate.value = new Date(
-  maxDate.value.setFullYear(maxDate.value.getFullYear() - 15)
-);
 
 const hasErrors = ref(false);
 const errorMessage = ref("null");
@@ -174,7 +155,7 @@ const onSubmit = () => {
 
   axios.get(`${baseUrl}/sanctum/csrf-cookie`).then((response) => {
     axios
-      .post(`${apiBase}/update-personal-information`, formData.value)
+      .post(`${apiBase}/update-obstetrical-information`, formData.value)
       .then((response) => {
         const user = response.data.data;
 
@@ -184,11 +165,7 @@ const onSubmit = () => {
         Toast.success({
           message: response.data.message,
           onClose: () => {
-            if (!user.obstetrical_information) {
-              router.replace({ name: "obstetrical-info-form" });
-            } else {
-              router.replace({ name: "home" });
-            }
+            router.replace({ name: "home" });
           },
         });
       })
@@ -224,16 +201,15 @@ onMounted(() => {
 
   currentUser.value = user;
 
-  formData.value.name = user.name;
+  if (user.obstetrical_information) {
+    const obsData = user.obstetrical_information;
 
-  if (user.personal_information) {
-    const personalInfo = user.personal_information;
-
-    formData.value.phone = personalInfo.phone;
-    formData.value.date_of_birth = personalInfo.date_of_birth;
-    formData.value.next_of_kin = personalInfo.next_of_kin;
-    formData.value.address = personalInfo.address;
-    formData.value.occupation = personalInfo.occupation;
+    formData.value = {
+      previous_pregnancies: obsData.previous_pregnancies,
+      liveborns: obsData.liveborns,
+      stillbirths: obsData.stillbirths,
+      previous_mode_of_delivery: obsData.previous_mode_of_delivery,
+    };
   }
 });
 </script>
