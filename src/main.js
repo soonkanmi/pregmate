@@ -25,7 +25,7 @@ import {
   List,
   Divider,
 } from "vant";
-import enUS from 'vant/es/locale/lang/en-US';
+import enUS from "vant/es/locale/lang/en-US";
 import App from "./App.vue";
 import axios from "axios";
 import VueAxios from "vue-axios";
@@ -80,6 +80,26 @@ const routes = [
     component: () => import("./views/VitalsList.vue"),
     name: "vitals-list",
   },
+  {
+    path: "/profile",
+    component: () => import("./views/ProfilePage.vue"),
+    name: "profile",
+  },
+  {
+    path: "/profile/personal-information",
+    component: () => import("./views/PersonalInfoUpdate.vue"),
+    name: "update-personal-information",
+  },
+  {
+    path: "/profile/obstetrical-information",
+    component: () => import("./views/ObstetricalInfoUpdate.vue"),
+    name: "update-obstetrical-information",
+  },
+  {
+    path: "/profile/medical-information",
+    component: () => import("./views/MedicalInfoUpdate.vue"),
+    name: "update-medical-information",
+  },
   { path: "/home", component: () => import("./views/Home.vue"), name: "home" },
 ];
 
@@ -91,18 +111,18 @@ const router = createRouter({
 const app = createApp(App);
 
 axios.defaults.withCredentials = true;
-axios.defaults.headers['Content-Type'] = 'application/json';
+axios.defaults.headers["Content-Type"] = "application/json";
 
-app.use(VueAxios, axios)
-app.provide('axios', app.config.globalProperties.axios)  // provide 'axios'
+app.use(VueAxios, axios);
+app.provide("axios", app.config.globalProperties.axios); // provide 'axios'
 
-var ls = new SecureLS({encodingType: 'aes'});
-app.provide('secureLS', ls)
+var ls = new SecureLS({ encodingType: "aes" });
+app.provide("secureLS", ls);
 
 app.use(router);
-app.use(createPinia())
+app.use(createPinia());
 
-Locale.use('en-US', enUS);
+Locale.use("en-US", enUS);
 const vantComponents = [
   Tabbar,
   TabbarItem,

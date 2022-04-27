@@ -1,54 +1,36 @@
 <template>
-  <app-layout
-    :show-title="true"
-    title="PregMate"
-  >
+  <app-layout :show-title="true" title="PregMate" :active-tab="2">
     <div class="p-10">
       <div class="text-left text-dark mb-5">
         <p class="text-dark-500 dark:text-white-400 text-md leading-6">
-          Dashboard
+          My Profiles
         </p>
       </div>
       <div
-        class="bg-white border-slate-100 dark:bg-slate-800 dark:border-slate-500 border-b rounded-t-xl rounded-b-xl p-5 pb-5 sm:p-10 sm:pb-8 lg:p-6 xl:p-10 xl:pb-8 space-y-6 sm:space-y-8 lg:space-y-6 xl:space-y-8"
+        class="bg-slate-50 text-slate-500 dark:bg-slate-600 dark:text-slate-200 rounded-t-xl rounded-b-xl flex items-center p-4 sm:p-10 sm:pb-8 lg:p-6 xl:p-10 xl:pb-8 space-y-6 sm:space-y-8 lg:space-y-6 xl:space-y-8 mt-5 cursor-pointer"
+        @click="goToPage('update-personal-information')"
       >
         <div class="flex items-center space-x-4">
-          <img
-            src="/pregmate.png"
-            alt=""
-            width="88"
-            height="88"
-            class="flex-none rounded-lg bg-slate-100"
+          <van-icon
+            name="user-o"
+            class="text-black-500 dark:text-white"
+            size="4rem"
           />
           <div
             class="min-w-0 flex-auto space-y-1 justify-start text-left font-semibold text-lg"
           >
             <p class="text-cyan-500 dark:text-cyan-400 text-md leading-6">
-              Welcome {{ currentUser ? currentUser.name : "" }}
+              Personal Information
             </p>
-          </div>
-        </div>
-      </div>
-      <div
-        class="bg-white border-slate-100 dark:bg-slate-800 dark:border-slate-500 border-b rounded-t-xl rounded-b-xl p-4 sm:p-10 sm:pb-8 lg:p-6 xl:p-10 xl:pb-8 space-y-6 sm:space-y-8 lg:space-y-6 xl:space-y-8 mt-5"
-      >
-        <div class="flex items-center space-x-4">
-          <h1 class="text-black-600 dark:text-white text-7xl">{{ weeksGone }}</h1>
-          <div
-            class="min-w-0 flex-auto space-y-1 justify-start text-left font-semibold text-lg"
-          >
-            <p class="text-cyan-500 dark:text-cyan-400 text-md leading-6">
-              Weeks
+            <p class="text-slate-500 dark:text-slate-400 text-sm">
+              Manage your personal information
             </p>
-            <h2 class="text-slate-500 dark:text-slate-400 text-sm leading-6">
-              {{ currentTrimester }} trimester
-            </h2>
           </div>
         </div>
       </div>
       <div
         class="bg-slate-50 text-slate-500 dark:bg-slate-600 dark:text-slate-200 rounded-t-xl rounded-b-xl flex items-center p-4 sm:p-10 sm:pb-8 lg:p-6 xl:p-10 xl:pb-8 space-y-6 sm:space-y-8 lg:space-y-6 xl:space-y-8 mt-5 cursor-pointer"
-        @click="goToVitals"
+        @click="goToPage('update-obstetrical-information')"
       >
         <div class="flex items-center space-x-4">
           <van-icon
@@ -60,10 +42,76 @@
             class="min-w-0 flex-auto space-y-1 justify-start text-left font-semibold text-lg"
           >
             <p class="text-cyan-500 dark:text-cyan-400 text-md leading-6">
-              Vitals
+              Obstetrical Information
             </p>
             <p class="text-slate-500 dark:text-slate-400 text-sm">
-              Your vitals have been submitted for the day.
+              Manage your obstetrical information
+            </p>
+          </div>
+        </div>
+      </div>
+      <div
+        class="bg-slate-50 text-slate-500 dark:bg-slate-600 dark:text-slate-200 rounded-t-xl rounded-b-xl flex items-center p-4 sm:p-10 sm:pb-8 lg:p-6 xl:p-10 xl:pb-8 space-y-6 sm:space-y-8 lg:space-y-6 xl:space-y-8 mt-5 cursor-pointer"
+        @click="goToPage('update-medical-information')"
+      >
+        <div class="flex items-center space-x-4">
+          <van-icon
+            name="records"
+            class="text-black-500 dark:text-white"
+            size="4rem"
+          />
+          <div
+            class="min-w-0 flex-auto space-y-1 justify-start text-left font-semibold text-lg"
+          >
+            <p class="text-cyan-500 dark:text-cyan-400 text-md leading-6">
+              Medical Information
+            </p>
+            <p class="text-slate-500 dark:text-slate-400 text-sm">
+              Manage your medical information
+            </p>
+          </div>
+        </div>
+      </div>
+      <div
+        class="bg-slate-50 text-slate-500 dark:bg-slate-600 dark:text-slate-200 rounded-t-xl rounded-b-xl flex items-center p-4 sm:p-10 sm:pb-8 lg:p-6 xl:p-10 xl:pb-8 space-y-6 sm:space-y-8 lg:space-y-6 xl:space-y-8 mt-5 cursor-pointer"
+        @click="showPregnancyForm = true"
+      >
+        <div class="flex items-center space-x-4">
+          <van-icon
+            name="calendar-o"
+            class="text-black-500 dark:text-white"
+            size="4rem"
+          />
+          <div
+            class="min-w-0 flex-auto space-y-1 justify-start text-left font-semibold text-lg"
+          >
+            <p class="text-cyan-500 dark:text-cyan-400 text-md leading-6">
+              Update Pregnancy Information
+            </p>
+            <p class="text-slate-500 dark:text-slate-400 text-sm">
+              Update your pregnancy information
+            </p>
+          </div>
+        </div>
+      </div>
+      <div
+        class="bg-slate-50 text-slate-500 dark:bg-slate-600 dark:text-slate-200 rounded-t-xl rounded-b-xl flex items-center p-4 sm:p-10 sm:pb-8 lg:p-6 xl:p-10 xl:pb-8 space-y-6 sm:space-y-8 lg:space-y-6 xl:space-y-8 mt-5 cursor-pointer"
+        @click="doLogout"
+      >
+        <div class="flex items-center space-x-4">
+          <van-icon
+            name="close"
+            class="text-black-500 dark:text-white"
+            size="4rem"
+          />
+          <div
+            class="min-w-0 flex-auto space-y-1 justify-start text-left font-semibold text-lg"
+          >
+            <p class="text-cyan-500 dark:text-cyan-400 text-md leading-6">
+              Logout
+            </p>
+            <p class="text-slate-500 dark:text-slate-400 text-sm">
+              Clear session
             </p>
           </div>
         </div>
@@ -74,11 +122,13 @@
       v-model:show="showPregnancyForm"
       :close-on-click-overlay="false"
       round
+      closeable
       position="bottom"
       :style="{ height: '40%' }"
     >
       <div class="p-10">
-        <h2 class="my-2 leading-2 text-xl font-bold">Pregnancy Information</h2>
+        <h2 class="my-2 leading-2 text-xl font-bold">Update Pregnancy Information</h2>
+        <h4 v-if="currentUser">Current Conception Date: {{ (new Date(currentUser.pregnancy_information.date_concieved)).toDateString() }}</h4>
         <van-form @submit="submitPregnancyInfo">
           <van-cell-group inset class="py-3">
             <van-field
@@ -151,7 +201,6 @@ import {
   getFirstTrimester,
   getSecondTrimester,
   getEstimatedDueDate,
-  getWeeksGone
 } from "../utils/calculator";
 
 import { Toast } from "vant";
@@ -280,12 +329,53 @@ const submitPregnancyInfo = () => {
   });
 };
 
-const goToVitals = () => {
-  router.push({ name: "vitals-list" });
+const goToPage = (name) => {
+  router.push({ name:  name});
 };
 
-const weeksGone = ref(0);
-const currentTrimester = ref('1st');
+const doLogout = () => {
+  axios.get(`${baseUrl}/sanctum/csrf-cookie`).then(() => {
+    axios
+      .get(`${apiBase}/logout`)
+      .then((response) => {
+        sessionStore.clearSession();
+        Toast.success({
+          message: "Logout successfully",
+          onClose: () => {
+            router.replace({ name: "login" });
+          },
+        });
+      })
+      .catch((err) => {
+        errorMessage.value =
+          err.response && err.response.data && err.response.data.message
+            ? err.response.data.message
+            : "An unexpected error occured";
+
+        if (err.response && err.response.status === 422) {
+          errorMessage.value = "Validation errors";
+          validationErrors.value = Object.values(err.response.data.errors)
+            .join(",")
+            .split(",");
+        } else if (err.response && err.response.status === 401) {
+          sessionStore.clearSession();
+          Toast.success({
+            message: "Session Expired",
+            onClose: () => {
+              router.replace({ name: "login" });
+            },
+          });
+
+          return;
+        } else {
+          Toast.fail(errorMessage.value);
+          return;
+        }
+
+        hasErrors.value = true;
+      });
+  });
+};
 
 onMounted(() => {
   sessionStore.getFromLocalStorage(); // Load user session from local storage
@@ -302,21 +392,6 @@ onMounted(() => {
     return router.replace({ name: "obstetrical-info-form" });
   } else if (!user.medical_information) {
     return router.replace({ name: "medical-info-form" });
-  }
-
-  if (!user.pregnancy_information) {
-    showPregnancyForm.value = true;
-  } else {
-    weeksGone.value = getWeeksGone(user.pregnancy_information.date_concieved);
-    const now = new Date();
-    const ftE = new Date(`${user.pregnancy_information.first_trimester_ends} 23:59:59`);
-    const stE = new Date(`${user.pregnancy_information.second_trimester_ends} 23:59:59`);
-
-    if (now > ftE) {
-      currentTrimester.value = '2nd'
-    } else if ( now > stE) {
-      currentTrimester.value = '3rd'
-    }
   }
 
   currentUser.value = user;

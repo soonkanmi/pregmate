@@ -28,6 +28,10 @@
 
 <script setup>
 import { ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
+
+const route = useRoute();
+const router = useRouter();
 
 const props = defineProps({
   activeTab: {
@@ -88,6 +92,18 @@ const props = defineProps({
   }
 });
 
-const changeTab = (tabIndex) => console.log(tabIndex);
+const changeTab = (tabIndex) => {
+  if (tabIndex === 0 && route.name !== 'home') {
+    return router.push({ name: 'home' });
+  }
+
+  if (tabIndex === 1 && route.name !== 'vitals-list') {
+    return router.push({ name: 'vitals-list' });
+  }
+
+  if (tabIndex === 2 && route.name !== 'profile') {
+    return router.push({ name: 'profile' });
+  }
+};
 
 </script>
