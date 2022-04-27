@@ -5,6 +5,10 @@
 <script setup></script>
 
 <style>
+html {
+  min-height: 100%;
+}
+
 body {
   background-color: #f6f5ef;
 }
@@ -15,5 +19,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  min-height: 100%;
 }
 </style>

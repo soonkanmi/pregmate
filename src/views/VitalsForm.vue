@@ -5,22 +5,78 @@
     left-arrow
     @click-left="goBack"
   />
-  <h3 class="mt-20 pt-10 font-bold text-xl">Daily Vitals</h3>
+  <h3 class="mt-20 pt-10 font-bold text-xl">Submit Daily Vitals</h3>
   <div class="mt-2 pt-5 px-10">
     <van-form @submit="onSubmit">
       <van-cell-group class="py-3">
         <van-field
-          v-model="formData.name"
-          name="name"
-          label="Name"
-          placeholder="Full Name"
-          :rules="[{ required: true, message: 'Name is required' }]"
+          v-model="formData.weight"
+          name="weight"
+          label="Weight"
+          placeholder="Weight (kg)"
+          label-width="18em"
+          :rules="[{ required: true, message: 'Weight is required' }]"
           required
+          type="number"
         />
+        <van-field
+          v-model="formData.blood_pressure_systolic"
+          name="blood_pressure_systolic"
+          label="Blood Pressure Systolic (mmHg)"
+          placeholder="Blood Pressure Systolic"
+          label-width="18em"
+          :rules="[
+            { required: true, message: 'Blood Pressure systolic is required' },
+          ]"
+          required
+          type="number"
+        />
+        <van-field
+          v-model="formData.blood_pressure_diastolic"
+          name="blood_pressure_diastolic"
+          label="Blood Pressure Diastolic (mmHg)"
+          placeholder="Blood Pressure Diastolic"
+          label-width="18em"
+          :rules="[
+            { required: true, message: 'Blood Pressure Diastolic is required' },
+          ]"
+          required
+          type="number"
+        />
+        <van-field
+          v-model="formData.temperature"
+          name="temperature"
+          label="Temperature"
+          placeholder="Temperature in degree"
+          label-width="18em"
+          :rules="[{ required: true, message: 'Temperature is required' }]"
+          required
+          type="number"
+        />
+        <van-field
+          v-model="formData.fluid_intake"
+          name="fluid_intake"
+          label="Fluid Intake (ml)"
+          placeholder="Fluid intake (ml)"
+          label-width="18em"
+          :rules="[{ required: true, message: 'Fluid intake is required' }]"
+          required
+          type="number"
+        />
+        <van-cell-group>
+          <van-cell>
+            <template #right-icon>
+              <van-checkbox v-model="formData.drug_intake" shape="square"
+                >Have you taken your drugs today?</van-checkbox
+              >
+            </template>
+          </van-cell>
+        </van-cell-group>
       </van-cell-group>
+
       <div class="mt-10 mx-5">
         <van-button plain round block type="primary" native-type="submit">
-          Register
+          Save Vitals
         </van-button>
       </div>
     </van-form>
@@ -97,9 +153,9 @@ const onSubmit = () => {
       .post(`${apiBase}/record-vitals`, formData.value)
       .then((response) => {
         Toast.success({
-          message: "Submit Your Daily Vitals",
+          message: "Submit Your Vitals",
           onClose: () => {
-            router.replace({ name: "home" });
+            router.replace({ name: "vitals-list" });
           },
         });
       })
@@ -114,6 +170,18 @@ const onSubmit = () => {
           validationErrors.value = Object.values(err.response.data.errors)
             .join(",")
             .split(",");
+        }
+
+        if (err.response && err.response.status === 401) {
+            sessionStore.clearSession();
+            Toast.success({
+                message: "Session Expired",
+                onClose: () => {
+                    router.replace({ name: "login" });
+                },
+            });
+
+            return;
         }
 
         hasErrors.value = true;

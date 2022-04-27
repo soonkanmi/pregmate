@@ -182,6 +182,18 @@ const onSubmit = () => {
             .split(",");
         }
 
+        if (err.response && err.response.status === 401) {
+            sessionStore.clearSession();
+            Toast.success({
+                message: "Session Expired",
+                onClose: () => {
+                    router.replace({ name: "login" });
+                },
+            });
+
+            return;
+        }
+
         hasErrors.value = true;
       })
       .finally(() => {

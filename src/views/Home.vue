@@ -35,7 +35,7 @@
         class="bg-white border-slate-100 dark:bg-slate-800 dark:border-slate-500 border-b rounded-t-xl rounded-b-xl p-4 sm:p-10 sm:pb-8 lg:p-6 xl:p-10 xl:pb-8 space-y-6 sm:space-y-8 lg:space-y-6 xl:space-y-8 mt-5"
       >
         <div class="flex items-center space-x-4">
-          <h1 class="text-black-600 dark:text-white text-7xl">30</h1>
+          <h1 class="text-black-600 dark:text-white text-7xl">{{ weeksGone }}</h1>
           <div
             class="min-w-0 flex-auto space-y-1 justify-start text-left font-semibold text-lg"
           >
@@ -43,7 +43,7 @@
               Weeks
             </p>
             <h2 class="text-slate-500 dark:text-slate-400 text-sm leading-6">
-              3rd trimester
+              {{ currentTrimester }} trimester
             </h2>
           </div>
         </div>
@@ -153,6 +153,7 @@ import {
   getFirstTrimester,
   getSecondTrimester,
   getEstimatedDueDate,
+  getWeeksGone
 } from "../utils/calculator";
 
 import { Toast } from "vant";
@@ -222,12 +223,15 @@ const submitPregnancyInfo = () => {
   pregFormData.value.date_concieved = calculateDateConcieved(
     selectedDate.value
   );
+
   pregFormData.value.first_trimester_ends = getFirstTrimester(
     selectedDate.value
   );
+
   pregFormData.value.second_trimester_ends = getSecondTrimester(
     selectedDate.value
   );
+
   pregFormData.value.estimated_due_date = getEstimatedDueDate(
     selectedDate.value
   );
@@ -258,8 +262,19 @@ const submitPregnancyInfo = () => {
           validationErrors.value = Object.values(err.response.data.errors)
             .join(",")
             .split(",");
+        } else if (err.response && err.response.status === 401) {
+          sessionStore.clearSession();
+          Toast.success({
+            message: "Session Expired",
+            onClose: () => {
+              router.replace({ name: "login" });
+            },
+          });
+
+          return;
         } else {
           Toast.fail(errorMessage.value);
+          return;
         }
 
         hasErrors.value = true;
@@ -268,8 +283,11 @@ const submitPregnancyInfo = () => {
 };
 
 const goToVitals = () => {
-  console.log("Loading Vitals");
+  router.push({ name: "vitals-list" });
 };
+
+const weeksGone = ref(0);
+const currentTrimester = ref('1st');
 
 onMounted(() => {
   sessionStore.getFromLocalStorage(); // Load user session from local storage
@@ -290,6 +308,17 @@ onMounted(() => {
 
   if (!user.pregnancy_information) {
     showPregnancyForm.value = true;
+  } else {
+    weeksGone.value = getWeeksGone(user.pregnancy_information.date_concieved);
+    const now = new Date();
+    const ftE = new Date(`${user.pregnancy_information.first_trimester_ends} 23:59:59`);
+    const stE = new Date(`${user.pregnancy_information.second_trimester_ends} 23:59:59`);
+
+    if (now > ftE) {
+      currentTrimester.value = '2nd'
+    } else if ( now > stE) {
+      currentTrimester.value = '3rd'
+    }
   }
 
   currentUser.value = user;

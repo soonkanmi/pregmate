@@ -31,6 +31,10 @@ export const useSessionStore = defineStore("counter", {
     },
     getFromLocalStorage() {
       this.currentUser = ls.get('activeSession');
+    },
+    clearSession() {
+      this.currentUser = null;
+      ls.clear();
     }
   },
 });

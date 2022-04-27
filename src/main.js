@@ -19,6 +19,11 @@ import {
   Toast,
   Popup,
   Picker,
+  Checkbox,
+  CheckboxGroup,
+  PullRefresh,
+  List,
+  Divider,
 } from "vant";
 import enUS from 'vant/es/locale/lang/en-US';
 import App from "./App.vue";
@@ -66,9 +71,14 @@ const routes = [
     name: "medical-info-form",
   },
   {
-    path: "/vital-form",
-    component: () => import("./views/VitalForm.vue"),
-    name: "vital-form",
+    path: "/vitals-form",
+    component: () => import("./views/VitalsForm.vue"),
+    name: "vitals-form",
+  },
+  {
+    path: "/vitals-list",
+    component: () => import("./views/VitalsList.vue"),
+    name: "vitals-list",
   },
   { path: "/home", component: () => import("./views/Home.vue"), name: "home" },
 ];
@@ -110,6 +120,11 @@ const vantComponents = [
   Toast,
   Popup,
   Picker,
+  Checkbox,
+  CheckboxGroup,
+  PullRefresh,
+  List,
+  Divider,
 ];
 
 vantComponents.forEach((vantComponent) => {
